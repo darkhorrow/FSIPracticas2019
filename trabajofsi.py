@@ -51,18 +51,20 @@ validation_generator = test_datagen.flow_from_directory(
 # MODEL --------------------------------------------------
 
 model = Sequential()
-model.add(Conv2D(32, kernel_size=(3, 3),
+model.add(Conv2D(32, kernel_size=(5, 5),
                  activation='relu',
                  input_shape=(150, 150, 3)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(Conv2D(64, (5, 5), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
-model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(Conv2D(96, (5, 5), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(128, (5, 5), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
-
 model.add(Dropout(0.5))
 model.add(Dense(102, activation='softmax'))
 
