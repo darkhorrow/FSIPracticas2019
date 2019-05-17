@@ -1,0 +1,659 @@
+﻿from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import RMSprop
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras import backend as K
+import keras
+from time import time
+
+
+# DATA SOURCE --------------------------------------------------
+
+batch_size = 20
+
+train_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+validation_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+
+train_datagen = ImageDataGenerator(
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
+
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_directory(
+        train_data_dir,
+        target_size=(150, 150),
+        batch_size=batch_size,
+        class_mode='categorical')
+
+validation_generator = test_datagen.flow_from_directory(
+        validation_data_dir,
+        target_size=(150, 150),
+        batch_size=32,
+        class_mode='categorical')
+
+# MODEL --------------------------------------------------
+
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(3, 3),
+                 activation='relu',
+                 input_shape=(150, 150, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+
+model.add(Dropout(0.5))
+model.add(Dense(102, activation='softmax'))
+
+model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(),
+              metrics=['accuracy'])
+
+# TRAINING --------------------------------------------------
+
+epochs = 10
+
+model.fit_generator(
+        train_generator,
+        steps_per_epoch=100,
+        epochs=epochs, 
+        validation_data=validation_generator,
+        validation_steps=400,
+)
+
+Found 9144 images belonging to 102 classes.
+Found 9144 images belonging to 102 classes.
+Epoch 1/10
+100/100 [==============================] - 691s 7s/step - loss: 4.4022 - acc: 0.0810 - val_loss: 4.2276 - val_acc: 0.0881
+Epoch 2/10
+100/100 [==============================] - 54s 543ms/step - loss: 4.1124 - acc: 0.1400 - val_loss: 4.0076 - val_acc: 0.2063
+Epoch 3/10
+100/100 [==============================] - 53s 531ms/step - loss: 3.8946 - acc: 0.1950 - val_loss: 3.6654 - val_acc: 0.2871
+Epoch 4/10
+100/100 [==============================] - 54s 540ms/step - loss: 3.6849 - acc: 0.2465 - val_loss: 3.4428 - val_acc: 0.2868
+Epoch 5/10
+100/100 [==============================] - 56s 562ms/step - loss: 3.5404 - acc: 0.2755 - val_loss: 3.2655 - val_acc: 0.3198
+Epoch 6/10
+100/100 [==============================] - 53s 529ms/step - loss: 3.4229 - acc: 0.2865 - val_loss: 3.2258 - val_acc: 0.3157
+Epoch 7/10
+100/100 [==============================] - 55s 550ms/step - loss: 3.3559 - acc: 0.3005 - val_loss: 3.0636 - val_acc: 0.3404
+Epoch 8/10
+100/100 [==============================] - 55s 549ms/step - loss: 3.2589 - acc: 0.3130 - val_loss: 2.9257 - val_acc: 0.3727
+Epoch 9/10
+100/100 [==============================] - 54s 537ms/step - loss: 3.1761 - acc: 0.3395 - val_loss: 2.8298 - val_acc: 0.3867
+Epoch 10/10
+100/100 [==============================] - 56s 559ms/step - loss: 3.0738 - acc: 0.3455 - val_loss: 2.7644 - val_acc: 0.4077
+
+<keras.callbacks.History at 0x7f77b12745f8>
+
+
+
+##############################################################################################################
+
+
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import RMSprop
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras import backend as K
+import keras
+from time import time
+
+
+# DATA SOURCE --------------------------------------------------
+
+batch_size = 20
+
+train_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+validation_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+
+train_datagen = ImageDataGenerator(
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
+
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_directory(
+        train_data_dir,
+        target_size=(150, 150),
+        batch_size=batch_size,
+        class_mode='categorical')
+
+validation_generator = test_datagen.flow_from_directory(
+        validation_data_dir,
+        target_size=(150, 150),
+        batch_size=32,
+        class_mode='categorical')
+
+# MODEL --------------------------------------------------
+
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(3, 3),
+                 activation='relu',
+                 input_shape=(150, 150, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(102, activation='softmax'))
+
+model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(),
+              metrics=['accuracy'])
+
+# TRAINING --------------------------------------------------
+
+epochs = 10
+
+model.fit_generator(
+        train_generator,
+        steps_per_epoch=100,
+        epochs=epochs, 
+        validation_data=validation_generator,
+        validation_steps=400,
+)
+Found 9144 images belonging to 102 classes.
+Found 9144 images belonging to 102 classes.
+Epoch 1/10
+100/100 [==============================] - 57s 565ms/step - loss: 4.5118 - acc: 0.0730 - val_loss: 4.3493 - val_acc: 0.1535
+Epoch 2/10
+100/100 [==============================] - 56s 558ms/step - loss: 4.1745 - acc: 0.1455 - val_loss: 3.9291 - val_acc: 0.2039
+Epoch 3/10
+100/100 [==============================] - 56s 557ms/step - loss: 3.8431 - acc: 0.2020 - val_loss: 3.5421 - val_acc: 0.2395
+Epoch 4/10
+100/100 [==============================] - 57s 565ms/step - loss: 3.6989 - acc: 0.2285 - val_loss: 3.3635 - val_acc: 0.2953
+Epoch 5/10
+100/100 [==============================] - 55s 546ms/step - loss: 3.5188 - acc: 0.2755 - val_loss: 3.2668 - val_acc: 0.3085
+Epoch 6/10
+100/100 [==============================] - 55s 545ms/step - loss: 3.4301 - acc: 0.2765 - val_loss: 3.1386 - val_acc: 0.3353
+Epoch 7/10
+100/100 [==============================] - 53s 527ms/step - loss: 3.3538 - acc: 0.3090 - val_loss: 3.0601 - val_acc: 0.3536
+Epoch 8/10
+100/100 [==============================] - 54s 540ms/step - loss: 3.2468 - acc: 0.3270 - val_loss: 2.9621 - val_acc: 0.3719
+Epoch 9/10
+100/100 [==============================] - 55s 554ms/step - loss: 3.1294 - acc: 0.3455 - val_loss: 2.8861 - val_acc: 0.3878
+Epoch 10/10
+100/100 [==============================] - 53s 533ms/step - loss: 3.0885 - acc: 0.3440 - val_loss: 2.7502 - val_acc: 0.3956
+
+<keras.callbacks.History at 0x7f77b9ba6c50>
+
+###############################################################################################################
+
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import RMSprop
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D, BatchNormalization
+from keras import backend as K
+import keras
+from time import time
+
+
+# DATA SOURCE --------------------------------------------------
+
+batch_size = 20
+
+train_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+validation_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+
+train_datagen = ImageDataGenerator(
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
+
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_directory(
+        train_data_dir,
+        target_size=(150, 150),
+        batch_size=batch_size,
+        class_mode='categorical')
+
+validation_generator = test_datagen.flow_from_directory(
+        validation_data_dir,
+        target_size=(150, 150),
+        batch_size=32,
+        class_mode='categorical')
+
+# MODEL --------------------------------------------------
+
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(3, 3),
+                 activation='relu',
+                 input_shape=(150, 150, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(BatchNormalization())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(BatchNormalization())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(102, activation='softmax'))
+
+model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(),
+              metrics=['accuracy'])
+
+# TRAINING --------------------------------------------------
+
+epochs = 10
+
+model.fit_generator(
+        train_generator,
+        steps_per_epoch=100,
+        epochs=epochs, 
+        validation_data=validation_generator,
+        validation_steps=400,
+)
+
+
+
+Found 9144 images belonging to 102 classes.
+Found 9144 images belonging to 102 classes.
+Epoch 1/10
+100/100 [==============================] - 58s 577ms/step - loss: 5.7750 - acc: 0.1025 - val_loss: 4.8588 - val_acc: 0.0936
+Epoch 2/10
+100/100 [==============================] - 57s 568ms/step - loss: 4.5095 - acc: 0.1415 - val_loss: 4.3765 - val_acc: 0.1237
+Epoch 3/10
+100/100 [==============================] - 54s 540ms/step - loss: 4.2202 - acc: 0.1910 - val_loss: 3.8626 - val_acc: 0.1931
+Epoch 4/10
+100/100 [==============================] - 54s 539ms/step - loss: 4.1846 - acc: 0.1710 - val_loss: 3.8517 - val_acc: 0.2158
+Epoch 5/10
+100/100 [==============================] - 54s 544ms/step - loss: 4.1053 - acc: 0.1935 - val_loss: 3.6512 - val_acc: 0.2453
+Epoch 6/10
+100/100 [==============================] - 54s 539ms/step - loss: 3.9316 - acc: 0.2215 - val_loss: 3.9982 - val_acc: 0.2228
+Epoch 7/10
+100/100 [==============================] - 54s 544ms/step - loss: 3.9267 - acc: 0.2015 - val_loss: 3.8638 - val_acc: 0.2500
+Epoch 8/10
+100/100 [==============================] - 56s 558ms/step - loss: 3.7612 - acc: 0.2225 - val_loss: 3.5895 - val_acc: 0.2479
+Epoch 9/10
+100/100 [==============================] - 54s 541ms/step - loss: 3.8253 - acc: 0.2205 - val_loss: 3.6087 - val_acc: 0.2478
+Epoch 10/10
+100/100 [==============================] - 53s 531ms/step - loss: 3.8042 - acc: 0.2245 - val_loss: 3.8491 - val_acc: 0.2568
+
+<keras.callbacks.History at 0x7f7797f021d0>
+
+###################################################################################################
+
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import RMSprop
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras import backend as K
+import keras
+from time import time
+
+
+# DATA SOURCE --------------------------------------------------
+
+batch_size = 20
+
+train_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+validation_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+
+train_datagen = ImageDataGenerator(
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
+
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_directory(
+        train_data_dir,
+        target_size=(150, 150),
+        batch_size=batch_size,
+        class_mode='categorical')
+
+validation_generator = test_datagen.flow_from_directory(
+        validation_data_dir,
+        target_size=(150, 150),
+        batch_size=32,
+        class_mode='categorical')
+
+# MODEL --------------------------------------------------
+
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(3, 3),
+                 activation='relu',
+                 input_shape=(150, 150, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+
+model.add(Dropout(0.5))
+model.add(Dense(102, activation='softmax'))
+
+model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(),
+              metrics=['accuracy'])
+
+# TRAINING --------------------------------------------------
+
+epochs = 20
+
+model.fit_generator(
+        train_generator,
+        steps_per_epoch=100,
+        epochs=epochs, 
+        validation_data=validation_generator,
+        validation_steps=400,
+)
+
+
+
+Found 9144 images belonging to 102 classes.
+Found 9144 images belonging to 102 classes.
+Epoch 1/20
+100/100 [==============================] - 57s 566ms/step - loss: 4.4156 - acc: 0.0940 - val_loss: 4.2813 - val_acc: 0.1169
+Epoch 2/20
+100/100 [==============================] - 55s 549ms/step - loss: 4.1622 - acc: 0.1520 - val_loss: 3.8001 - val_acc: 0.2182
+Epoch 3/20
+100/100 [==============================] - 54s 537ms/step - loss: 3.9162 - acc: 0.1815 - val_loss: 3.5223 - val_acc: 0.2563
+Epoch 4/20
+100/100 [==============================] - 54s 544ms/step - loss: 3.7022 - acc: 0.2335 - val_loss: 3.4624 - val_acc: 0.3108
+Epoch 5/20
+100/100 [==============================] - 53s 535ms/step - loss: 3.5008 - acc: 0.2735 - val_loss: 3.4350 - val_acc: 0.3174
+Epoch 6/20
+100/100 [==============================] - 54s 541ms/step - loss: 3.4461 - acc: 0.2890 - val_loss: 3.1462 - val_acc: 0.3249
+Epoch 7/20
+100/100 [==============================] - 55s 550ms/step - loss: 3.3745 - acc: 0.3040 - val_loss: 3.2326 - val_acc: 0.3352
+Epoch 8/20
+100/100 [==============================] - 56s 560ms/step - loss: 3.3295 - acc: 0.3015 - val_loss: 2.9940 - val_acc: 0.3659
+Epoch 9/20
+100/100 [==============================] - 53s 533ms/step - loss: 3.2020 - acc: 0.3300 - val_loss: 2.8983 - val_acc: 0.3761
+Epoch 10/20
+100/100 [==============================] - 55s 547ms/step - loss: 3.1052 - acc: 0.3315 - val_loss: 2.9087 - val_acc: 0.3919
+Epoch 11/20
+100/100 [==============================] - 55s 548ms/step - loss: 3.1063 - acc: 0.3470 - val_loss: 2.7671 - val_acc: 0.4001
+Epoch 12/20
+100/100 [==============================] - 53s 533ms/step - loss: 2.9571 - acc: 0.3650 - val_loss: 2.6238 - val_acc: 0.4151
+Epoch 13/20
+100/100 [==============================] - 56s 564ms/step - loss: 2.9964 - acc: 0.3530 - val_loss: 2.6552 - val_acc: 0.4226
+Epoch 14/20
+100/100 [==============================] - 54s 541ms/step - loss: 2.9615 - acc: 0.3550 - val_loss: 2.5086 - val_acc: 0.4411
+Epoch 15/20
+100/100 [==============================] - 52s 522ms/step - loss: 2.8891 - acc: 0.3735 - val_loss: 2.6088 - val_acc: 0.4161
+Epoch 16/20
+100/100 [==============================] - 54s 536ms/step - loss: 2.7871 - acc: 0.3875 - val_loss: 2.4185 - val_acc: 0.4550
+Epoch 17/20
+100/100 [==============================] - 54s 540ms/step - loss: 2.6535 - acc: 0.4020 - val_loss: 2.2735 - val_acc: 0.4790
+Epoch 18/20
+100/100 [==============================] - 53s 529ms/step - loss: 2.6991 - acc: 0.3950 - val_loss: 2.2710 - val_acc: 0.4829
+Epoch 19/20
+100/100 [==============================] - 55s 551ms/step - loss: 2.6920 - acc: 0.3910 - val_loss: 2.2143 - val_acc: 0.4941
+Epoch 20/20
+100/100 [==============================] - 53s 535ms/step - loss: 2.5977 - acc: 0.4215 - val_loss: 2.1834 - val_acc: 0.5041
+
+<keras.callbacks.History at 0x7f77c3390550>
+
+#############################################################################################################
+
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import RMSprop
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras import backend as K
+import keras
+from time import time
+
+
+# DATA SOURCE --------------------------------------------------
+
+batch_size = 50
+
+train_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+validation_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+
+train_datagen = ImageDataGenerator(
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
+
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_directory(
+        train_data_dir,
+        target_size=(150, 150),
+        batch_size=batch_size,
+        class_mode='categorical')
+
+validation_generator = test_datagen.flow_from_directory(
+        validation_data_dir,
+        target_size=(150, 150),
+        batch_size=32,
+        class_mode='categorical')
+
+# MODEL --------------------------------------------------
+
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(3, 3),
+                 activation='relu',
+                 input_shape=(150, 150, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Conv2D(96, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+
+model.add(Dropout(0.5))
+model.add(Dense(102, activation='softmax'))
+
+model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(),
+              metrics=['accuracy'])
+
+# TRAINING --------------------------------------------------
+
+epochs = 20
+
+model.fit_generator(
+        train_generator,
+        steps_per_epoch=150,
+        epochs=epochs, 
+        validation_data=validation_generator,
+        validation_steps=500,
+)
+
+
+
+Found 9144 images belonging to 102 classes.
+Found 9144 images belonging to 102 classes.
+Epoch 1/20
+150/150 [==============================] - 106s 704ms/step - loss: 4.3183 - acc: 0.1073 - val_loss: 3.7690 - val_acc: 0.2180
+Epoch 2/20
+150/150 [==============================] - 99s 663ms/step - loss: 3.7436 - acc: 0.2287 - val_loss: 3.5494 - val_acc: 0.2789
+Epoch 3/20
+150/150 [==============================] - 99s 658ms/step - loss: 3.5134 - acc: 0.2709 - val_loss: 3.1669 - val_acc: 0.3507
+Epoch 4/20
+150/150 [==============================] - 98s 653ms/step - loss: 3.3259 - acc: 0.3029 - val_loss: 3.0046 - val_acc: 0.3624
+Epoch 5/20
+150/150 [==============================] - 99s 663ms/step - loss: 3.1726 - acc: 0.3292 - val_loss: 2.7775 - val_acc: 0.4033
+Epoch 6/20
+150/150 [==============================] - 100s 665ms/step - loss: 3.0154 - acc: 0.3469 - val_loss: 2.5725 - val_acc: 0.4254
+Epoch 7/20
+150/150 [==============================] - 98s 655ms/step - loss: 2.8868 - acc: 0.3669 - val_loss: 2.3831 - val_acc: 0.4436
+Epoch 8/20
+150/150 [==============================] - 98s 651ms/step - loss: 2.7828 - acc: 0.3846 - val_loss: 2.3366 - val_acc: 0.4724
+Epoch 9/20
+150/150 [==============================] - 102s 680ms/step - loss: 2.6908 - acc: 0.4000 - val_loss: 2.2679 - val_acc: 0.4715
+Epoch 10/20
+150/150 [==============================] - 97s 649ms/step - loss: 2.5833 - acc: 0.4150 - val_loss: 2.0105 - val_acc: 0.5370
+Epoch 11/20
+150/150 [==============================] - 98s 654ms/step - loss: 2.4549 - acc: 0.4373 - val_loss: 1.9540 - val_acc: 0.5549
+Epoch 12/20
+150/150 [==============================] - 100s 669ms/step - loss: 2.3896 - acc: 0.4463 - val_loss: 1.9273 - val_acc: 0.5321
+Epoch 13/20
+150/150 [==============================] - 97s 649ms/step - loss: 2.2859 - acc: 0.4603 - val_loss: 1.7202 - val_acc: 0.5955
+Epoch 14/20
+150/150 [==============================] - 99s 657ms/step - loss: 2.1738 - acc: 0.4815 - val_loss: 1.6004 - val_acc: 0.6282
+Epoch 15/20
+150/150 [==============================] - 99s 659ms/step - loss: 2.1270 - acc: 0.4942 - val_loss: 1.5177 - val_acc: 0.6475
+Epoch 16/20
+150/150 [==============================] - 99s 658ms/step - loss: 2.0892 - acc: 0.4881 - val_loss: 1.4980 - val_acc: 0.6291
+Epoch 17/20
+150/150 [==============================] - 98s 653ms/step - loss: 2.0429 - acc: 0.5059 - val_loss: 1.3418 - val_acc: 0.6730
+Epoch 18/20
+150/150 [==============================] - 100s 665ms/step - loss: 1.9204 - acc: 0.5273 - val_loss: 1.3110 - val_acc: 0.7015
+Epoch 19/20
+150/150 [==============================] - 99s 658ms/step - loss: 1.8738 - acc: 0.5400 - val_loss: 1.2620 - val_acc: 0.6878
+Epoch 20/20
+150/150 [==============================] - 98s 651ms/step - loss: 1.8070 - acc: 0.5513 - val_loss: 1.1959 - val_acc: 0.7051
+
+<keras.callbacks.History at 0x7f77c30f96a0>
+
+###############################################################################################
+
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import RMSprop
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras import backend as K
+import keras
+from time import time
+
+
+# DATA SOURCE --------------------------------------------------
+
+batch_size = 50
+
+train_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+validation_data_dir = '/content/drive/My Drive/FSI/101_ObjectCategories'
+
+train_datagen = ImageDataGenerator(
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
+
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_directory(
+        train_data_dir,
+        target_size=(150, 150),
+        batch_size=batch_size,
+        class_mode='categorical')
+
+validation_generator = test_datagen.flow_from_directory(
+        validation_data_dir,
+        target_size=(150, 150),
+        batch_size=32,
+        class_mode='categorical')
+
+# MODEL --------------------------------------------------
+
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(5, 5),
+                 activation='relu',
+                 input_shape=(150, 150, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(64, (5, 5), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Conv2D(96, (5, 5), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(128, (5, 5), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(102, activation='softmax'))
+
+model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(),
+              metrics=['accuracy'])
+
+# TRAINING --------------------------------------------------
+
+epochs = 20
+
+model.fit_generator(
+        train_generator,
+        steps_per_epoch=150,
+        epochs=epochs, 
+        validation_data=validation_generator,
+        validation_steps=500,
+)
+
+Found 9144 images belonging to 102 classes.
+Found 9144 images belonging to 102 classes.
+Epoch 1/20
+150/150 [==============================] - 2269s 15s/step - loss: 4.3888 - acc: 0.0824 - val_loss: 4.1582 - val_acc: 0.1481
+Epoch 2/20
+150/150 [==============================] - 138s 918ms/step - loss: 4.1250 - acc: 0.1409 - val_loss: 3.7386 - val_acc: 0.2355
+Epoch 3/20
+150/150 [==============================] - 138s 918ms/step - loss: 3.7064 - acc: 0.2422 - val_loss: 3.2016 - val_acc: 0.3275
+Epoch 4/20
+150/150 [==============================] - 136s 909ms/step - loss: 3.3778 - acc: 0.3047 - val_loss: 2.9968 - val_acc: 0.3576
+Epoch 5/20
+150/150 [==============================] - 139s 926ms/step - loss: 3.1466 - acc: 0.3340 - val_loss: 2.7383 - val_acc: 0.4035
+Epoch 6/20
+150/150 [==============================] - 137s 911ms/step - loss: 2.9177 - acc: 0.3672 - val_loss: 2.3737 - val_acc: 0.4642
+Epoch 7/20
+150/150 [==============================] - 137s 912ms/step - loss: 2.7230 - acc: 0.3991 - val_loss: 2.5410 - val_acc: 0.4361
+Epoch 8/20
+150/150 [==============================] - 138s 918ms/step - loss: 2.5973 - acc: 0.4156 - val_loss: 2.0998 - val_acc: 0.5119
+Epoch 9/20
+150/150 [==============================] - 139s 925ms/step - loss: 2.4741 - acc: 0.4380 - val_loss: 1.9599 - val_acc: 0.5477
+Epoch 10/20
+150/150 [==============================] - 137s 911ms/step - loss: 2.3363 - acc: 0.4610 - val_loss: 1.7971 - val_acc: 0.5751
+Epoch 11/20
+150/150 [==============================] - 137s 911ms/step - loss: 2.2461 - acc: 0.4789 - val_loss: 1.6750 - val_acc: 0.5979
+Epoch 12/20
+150/150 [==============================] - 136s 910ms/step - loss: 2.1344 - acc: 0.4960 - val_loss: 1.9156 - val_acc: 0.5373
+Epoch 13/20
+150/150 [==============================] - 135s 902ms/step - loss: 2.0535 - acc: 0.5132 - val_loss: 1.6240 - val_acc: 0.6161
+Epoch 14/20
+150/150 [==============================] - 137s 911ms/step - loss: 1.9743 - acc: 0.5214 - val_loss: 1.4064 - val_acc: 0.6500
+Epoch 15/20
+150/150 [==============================] - 134s 891ms/step - loss: 1.9043 - acc: 0.5442 - val_loss: 1.3298 - val_acc: 0.6614
+Epoch 16/20
+150/150 [==============================] - 136s 908ms/step - loss: 1.8631 - acc: 0.5463 - val_loss: 1.2333 - val_acc: 0.6938
+Epoch 17/20
+150/150 [==============================] - 135s 903ms/step - loss: 1.7721 - acc: 0.5675 - val_loss: 1.2365 - val_acc: 0.7008
+Epoch 18/20
+150/150 [==============================] - 138s 917ms/step - loss: 1.7284 - acc: 0.5750 - val_loss: 1.2438 - val_acc: 0.6891
+Epoch 19/20
+150/150 [==============================] - 135s 902ms/step - loss: 1.6733 - acc: 0.5851 - val_loss: 1.1819 - val_acc: 0.7114
+Epoch 20/20
+150/150 [==============================] - 135s 903ms/step - loss: 1.6243 - acc: 0.5921 - val_loss: 1.0599 - val_acc: 0.7320
+<keras.callbacks.History at 0x7fed768f6cc0>
